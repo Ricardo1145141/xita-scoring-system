@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>西塔老太太·服务体验反馈</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+    background: #f7f7f7;
+    color: #222;
+    -webkit-print-color-adjust: exact;
+    font-size: 14px;
+    overflow-x: hidden;
+  }
+
+  /* ===== 首页 ===== */
+  .entry-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 20px 40px;
+    background: linear-gradient(160deg, #c0392b 0%, #d35400 40%, #e67e22 100%);
+  }
+  .entry-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px 28px 32px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 16px 48px rgba(0,0,0,.25);
+  }
+  .entry-card .logo {
+    font-size: 28px;
+    font-weight: 800;
+    color: #c0392b;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .entry-card .subtitle {
+    font-size: 12px;
+    color: #aaa;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .entry-card .desc {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 28px;
+    line-height: 1.8;
+  }
+  .start-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: #fff;
+    transition: transform .15s;
+    letter-spacing: 1px;
+  }
+  .start-btn:active { transform: scale(.97); }
+  .start-btn .btn-icon { font-size: 20px; margin-right: 8px; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,.55);
+    margin-top: 28px;
+    padding: 10px;
+  }
+
+  /* ===== 评分页 ===== */
+  .scoring-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 0 90px;
+    display: none;
+    min-height: 100vh;
+    background: #f7f7f7;
+  }
+
+  .page-header {
+    background: #c0392b;
+    color: #fff;
+    padding: 14px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  .page-header .back-btn {
+    background: rgba(255,255,255,.2);
+    border: none;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .page-header .header-info { flex: 1; }
+  .page-header h1 { font-size: 16px; font-weight: 700; }
+  .page-header .info { font-size: 11px; opacity: .8; margin-top: 2px; }
+
+  .scoring-body { padding: 14px 16px; }
+
+  /* 提示横幅 */
+  .notice-banner {
+    background: #eaf2f8;
+    border-radius: 10px;
+    padding: 11px 14px;
+    margin-bottom: 14px;
+    font-size: 12.5px;
+    color: #2471a3;
+    line-height: 1.6;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .notice-banner .notice-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  /* 表单组 */
+  .form-group { margin-bottom: 12px; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+  }
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: border .2s;
+    background: #fff;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus { border-color: #c0392b; }
+  .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; }
+
+  /* 分隔文字 */
+  .divider-text {
+    text-align: center;
+    font-size: 12px;
+    color: #bbb;
+    margin: 4px 0 10px;
+    position: relative;
+  }
+  .divider-text::before,
+  .divider-text::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 28%;
+    height: 1px;
+    background: #e0e0e0;
+  }
+  .divider-text::before { left: 5%; }
+  .divider-text::after { right: 5%; }
+
+  /* 评分卡片 */
+  .score-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  }
+  .score-card .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .score-card .card-title .emoji { font-size: 16px; }
+
+  .score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .score-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .score-item:first-of-type { padding-top: 0; }
+  .score-item .item-label {
+    font-size: 13px;
+    color: #444;
+    flex: 1;
+    padding-right: 10px;
+    line-height: 1.4;
+  }
+
+  /* 星星 */
+  .stars { display: flex; gap: 3px; flex-shrink: 0; }
+  .star {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .12s;
+    user-select: none;
+    color: #ddd;
+  }
+  .star.active {
+    background: #f39c12;
+    border-color: #f39c12;
+    color: #fff;
+  }
+  .star:hover { border-color: #f39c12; }
+
+  /* 评语区 */
+  .comment-area {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 13px;
+    min-height: 68px;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+    -webkit-appearance: none;
+  }
+  .comment-area:focus { border-color: #c0392b; }
+  .comment-area::placeholder { color: #bbb; }
+
+  /* 已打分计数 */
+  .progress-bar {
+    margin: 14px 0 4px;
+    background: #fdf6f5;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .progress-bar .progress-text {
+    font-size: 13px;
+    color: #c0392b;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .progress-bar .progress-track {
+    flex: 1;
+    height: 6px;
+    background: #f0d4cf;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar .progress-fill {
+    height: 100%;
+    background: #c0392b;
+    border-radius: 3px;
+    width: 0%;
+    transition: width .3s;
+  }
+
+  /* 提交按钮 */
+  .submit-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    background: #fff;
+    box-shadow: 0 -2px 12px rgba(0,0,0,.1);
+    z-index: 200;
+  }
+  .submit-btn button {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    display: block;
+    padding: 14px;
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .submit-btn button:active { transform: scale(.98); }
+  .submit-btn button:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* 成功页 */
+  .success-page {
+    min-height: 100vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #f7f7f7;
+  }
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #27ae60;
+    color: #fff;
+    font-size: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .success-text { font-size: 20px; font-weight: 700; color: #27ae60; margin-bottom: 10px; }
+  .success-desc { font-size: 14px; color: #666; text-align: center; line-height: 1.8; }
+
+  .success-actions { margin-top: 28px; display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; }
+  .success-actions button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-primary { background: #c0392b; color: #fff; }
+  .btn-download { background: #2980b9; color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- ===== 首页 ===== -->
+<div class="entry-page" id="entryPage">
+  <div class="entry-card">
+    <div class="logo">🥩 西塔老太太</div>
+    <div class="subtitle">2026「匠心烤肉·品质服务」技能大赛</div>
+    <div class="desc">
+      用餐体验如何？<br>花1分钟告诉我们<br>参与即送小菜/酸梅汤一份 🎁
+    </div>
+    <button class="start-btn" onclick="goPage('feedbackPage')">
+      <span class="btn-icon">⭐</span> 开始评分
+    </button>
+  </div>
+  <div class="footer-note">西塔老太太·惠州运营总部 © 2026</div>
+</div>
+
+<!-- ===== 统一评分页 ===== -->
+<div class="scoring-page" id="feedbackPage">
+  <div class="page-header">
+    <button class="back-btn" onclick="goPage('entryPage')">←</button>
+    <div class="header-info">
+      <h1>⭐ 服务体验评分</h1>
+      <div class="info">共13项，点击星星即可打分</div>
+    </div>
+  </div>
+
+  <div class="scoring-body">
+    <div class="notice-banner">
+      <span class="notice-icon">💡</span>
+      <span>只需选择门店 → 逐项点星星 → 提交，全程不超过1分钟。参与即送小菜一份，结账时出示本页面即可。</span>
+    </div>
+
+    <!-- 基本信息 -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>📍 门店</label>
+        <select id="f_store">
+          <option value="">请选择</option>
+          <option>港惠店</option>
+          <option>金山湖店</option>
+          <option>华贸店</option>
+          <option>天益城店</option>
+          <option>中山万象汇店</option>
+          <option>普宁万泰汇店</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>🏷️ 服务员编号</label>
+        <input type="text" id="f_server" placeholder="不知可不填">
+      </div>
+    </div>
+
+    <div class="divider-text">— 以下逐项打分，1-10星 —</div>
+
+    <!-- 评分卡片1：服务态度 -->
+    <div class="score-card">
+      <div class="card-title"><span class="emoji">👋</span> 服务态度</div>
+      <div class="score-item"><span class="item-label">迎宾热情，主动问好</span><div class="stars" data-key="s1"></div></div>
+      <div class="score-item"><span class="item-label">微笑亲切，有亲和力</span><div class="stars" data-key="s2"></div></div>
+      <div class="score-item"><span class="item-label">主动介绍肉品吃法</span><div class="stars" data-key="s3"></div></div>
+    </div>
+
+    <!-- 评分卡片2：烤肉技术 -->
+    <div class="score-card">
+      <div class="card-title"><span class="emoji">🔥</span> 烤肉技术</div>
+      <div class="score-item"><span class="item-label">火候把控好，无焦糊/夹生</span><div class="stars" data-key="s4"></div></div>
+      <div class="score-item"><span class="item-label">翻面时机恰当，控油到位</span><div class="stars" data-key="s5"></div></div>
+      <div class="score-item"><span class="item-label">帮烤主动及时</span><div class="stars" data-key="s6"></div></div>
+      <div class="score-item"><span class="item-label">熟度符合我的偏好</span><div class="stars" data-key="s7"></div></div>
+    </div>
+
+    <!-- 评分卡片3：巡台关怀 -->
+    <div class="score-card">
+      <div class="card-title"><span class="emoji">🔄</span> 巡台关怀</div>
+      <div class="score-item"><span class="item-label">换篦子频率合理</span><div class="stars" data-key="s8"></div></div>
+      <div class="score-item"><span class="item-label">加水添菜及时</span><div class="stars" data-key="s9"></div></div>
+      <div class="score-item"><span class="item-label">餐桌保持整洁</span><div class="stars" data-key="s10"></div></div>
+    </div>
+
+    <!-- 评分卡片4：整体感受 -->
+    <div class="score-card">
+      <div class="card-title"><span class="emoji">😊</span> 整体感受</div>
+      <div class="score-item"><span class="item-label">服务自然，不过度不冷落</span><div class="stars" data-key="s11"></div></div>
+      <div class="score-item"><span class="item-label">送客有仪式感</span><div class="stars" data-key="s12"></div></div>
+      <div class="score-item"><span class="item-label">整体用餐体验</span><div class="stars" data-key="s13"></div></div>
+    </div>
+
+    <!-- 评语 -->
+    <div class="form-group" style="margin-top:12px;">
+      <label>✍️ 还有什么想说的？（选填）</label>
+      <textarea class="comment-area" id="f_comment" placeholder="满意的地方、不舒服的细节..."></textarea>
+    </div>
+
+    <!-- 进度条 -->
+    <div class="progress-bar">
+      <span class="progress-text" id="progressText">已打 0 / 13 项</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+
+  <div class="submit-btn">
+    <button id="submitBtn" onclick="submitScore()" disabled>✅ 提交评分</button>
+  </div>
+</div>
+
+<!-- ===== 成功页 ===== -->
+<div class="success-page" id="successPage">
+  <div class="success-icon">✓</div>
+  <div class="success-text">提交成功！</div>
+  <div class="success-desc">
+    感谢您的宝贵反馈<br>结账时出示本页面可领小菜一份 🎁<br>
+    <span style="font-size:12px;color:#999;">西塔老太太因您而更好 🥩</span>
+  </div>
+  <div class="success-actions">
+    <button class="btn-primary" onclick="goPage('entryPage')">返回首页</button>
+    <button class="btn-download" onclick="downloadData()">📥 下载全部数据</button>
+  </div>
+</div>
+
+<script>
+// ===== 页面导航 =====
+function goPage(pageId) {
+  document.getElementById('entryPage').style.display = 'none';
+  document.querySelectorAll('.scoring-page').forEach(p => p.style.display = 'none');
+  document.getElementById('successPage').style.display = 'none';
+
+  if (pageId === 'entryPage') {
+    document.getElementById('entryPage').style.display = 'flex';
+  } else if (pageId === 'successPage') {
+    document.getElementById('successPage').style.display = 'flex';
+  } else {
+    document.getElementById(pageId).style.display = 'block';
+  }
+  window.scrollTo(0, 0);
+}
+
+// ===== 初始化星星（全部10颗） =====
+document.querySelectorAll('.stars').forEach(container => {
+  for (let i = 0; i < 10; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.textContent = '★';
+    container.appendChild(star);
+  }
+});
+
+// ===== 点击星星 =====
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('star')) {
+    const container = e.target.parentElement;
+    const stars = container.querySelectorAll('.star');
+    const idx = Array.from(stars).indexOf(e.target);
+    const key = container.dataset.key;
+
+    // 清除同 key 组
+    if (key) {
+      document.querySelectorAll('.stars[data-key="' + key + '"]').forEach(sg => {
+        sg.querySelectorAll('.star').forEach(s => {
+          s.classList.remove('active');
+          s.style.color = '#ddd';
+        });
+      });
+    }
+
+    // 激活
+    for (let i = 0; i <= idx; i++) {
+      stars[i].classList.add('active');
+      stars[i].style.color = '#fff';
+    }
+
+    updateProgress();
+  }
+});
+
+// ===== 进度更新 =====
+function updateProgress() {
+  const total = document.querySelectorAll('.stars').length; // 13
+  const scored = document.querySelectorAll('.stars:has(.star.active)').length;
+  // fallback for browsers without :has
+  let count = 0;
+  document.querySelectorAll('.stars').forEach(sg => {
+    if (sg.querySelector('.star.active')) count++;
+  });
+
+  const text = document.getElementById('progressText');
+  const fill = document.getElementById('progressFill');
+  const btn = document.getElementById('submitBtn');
+
+  text.textContent = '已打 ' + count + ' / ' + total + ' 项';
+  fill.style.width = (count / total * 100) + '%';
+
+  // 至少打一半才能提交
+  if (count >= Math.ceil(total / 2)) {
+    btn.disabled = false;
+  } else {
+    btn.disabled = true;
+  }
+}
+
+// ===== 收集数据 =====
+function collectData() {
+  const data = {
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent.substring(0, 80)
+  };
+
+  // 文本字段
+  const store = document.getElementById('f_store');
+  const server = document.getElementById('f_server');
+  const comment = document.getElementById('f_comment');
+  if (store.value) data.store = store.value;
+  if (server.value) data.server = server.value;
+  if (comment.value) data.comment = comment.value;
+
+  // 星星评分
+  document.querySelectorAll('.stars').forEach(container => {
+    const key = container.dataset.key;
+    const active = container.querySelectorAll('.star.active').length;
+    data[key] = active;
+  });
+
+  return data;
+}
+
+// ===== 提交 =====
+function submitScore() {
+  // 检查门店
+  const store = document.getElementById('f_store').value;
+  if (!store) {
+    alert('请先选择您所在的门店哦~');
+    return;
+  }
+
+  // 检查至少打了一半
+  let count = 0;
+  document.querySelectorAll('.stars').forEach(sg => {
+    if (sg.querySelector('.star.active')) count++;
+  });
+  if (count < 7) {
+    alert('请至少打7项分以上再提交，谢谢~');
+    return;
+  }
+
+  const data = collectData();
+
+  // 保存
+  let allData = [];
+  try {
+    allData = JSON.parse(localStorage.getItem('xita_feedback') || '[]');
+  } catch(e) {}
+  allData.push(data);
+  localStorage.setItem('xita_feedback', JSON.stringify(allData));
+
+  goPage('successPage');
+}
+
+// ===== 下载 CSV =====
+function downloadData() {
+  let allData = [];
+  try {
+    allData = JSON.parse(localStorage.getItem('xita_feedback') || '[]');
+  } catch(e) {}
+
+  if (allData.length === 0) {
+    alert('暂无数据，请先提交评分');
+    return;
+  }
+
+  // 收集所有列
+  const keySet = new Set();
+  allData.forEach(row => Object.keys(row).forEach(k => keySet.add(k)));
+  const headers = Array.from(keySet);
+
+  let csv = '\uFEFF';
+  csv += headers.join(',') + '\n';
+  allData.forEach(row => {
+    csv += headers.map(h => {
+      const val = row[h] || '';
+      return '"' + String(val).replace(/"/g, '""') + '"';
+    }).join(',') + '\n';
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '西塔服务反馈_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// 阻止双击缩放
+document.addEventListener('dblclick', function(e) { e.preventDefault(); }, { passive: false });
+</script>
+
+</body>
+</html>
